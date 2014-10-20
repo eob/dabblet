@@ -1,4 +1,4 @@
-/**
+	/**
  * Variables
  */
 
@@ -241,7 +241,9 @@ body[data-seethrough] .editor.page > pre > span.token {
 }
 
 body[data-page="css"] #css-container,
-body[data-page="html"] #html-container,
+body[data-page="cts"] #cts-container,
+body[data-page="htmlcontent"] #htmlcontent-container,
+body[data-page="htmlmockup"] #htmlmockup-container,
 body[data-page="javascript"] #javascript-container,
 body[data-page="all"] .page:not(#javascript-container) {
 	display: block;
@@ -281,7 +283,15 @@ body[data-page="all"][data-view="split"] #css-container {
 	top: 40%;
 }
 
-body[data-page="all"][data-view="split-vertical"] .page:not(#html-container) {
+body[data-page="htmlcontent"][data-view="split-vertical"] .page:not(#htmlcontent-container) {
+	height: 80%;
+}
+
+body[data-page="htmlmockup"][data-view="split-vertical"] .page:not(#htmlmockup-container) {
+	height: 80%;
+}
+
+body[data-page="cts"][data-view="split-vertical"] .page:not(#cts-container) {
 	height: 80%;
 }
 
@@ -311,8 +321,10 @@ body[data-page="result"] > #result {
 }
 
 body[data-page="css"] .for-code.css,
+body[data-page="cts"] .for-code.cts,
 body[data-page="javascript"] .for-code.javascript,
-body[data-page="html"] .for-code.html {
+body[data-page="htmlcontent"] .for-code.htmlcontent,
+body[data-page="htmlmockup"] .for-code.htmlmockup {
 	display: block;
 }
 

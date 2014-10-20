@@ -3,7 +3,7 @@
  */
  
 var gist = {
-	clientId: 'da931d37076424f332ef',
+	clientId: '4dd18d36cb65a4b20b09', // github @cts user / Dabblet app
 	
 	oauth: [
 		// Step 1: Ask permission
