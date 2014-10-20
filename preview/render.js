@@ -1,4 +1,5 @@
-var style = document.querySelector('style');
+var style = document.querySelector('style [type="text/css"');
+var treesheet = document.querySelector('style [type="text/cts"');
 
 var domLoaded = false;
 
@@ -19,8 +20,16 @@ onmessage = function(evt) {
 			case 'css':
 				style.textContent = data;
 				break;
+
+			case 'cts':
+				treesheet.textContent = data;
+				break;
+
+			case 'mockup-html':
+				document.body.innerHTML = data;
+				break;
 				
-			case 'html':
+			case 'content-html':
 				document.body.innerHTML = data;
 				break;
 				

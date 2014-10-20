@@ -108,10 +108,11 @@ var gist = {
 		
 		var id = gist.id || '',
 			cssCode = css.textContent.trim(),
-			htmlMarkup = html.textContent.trim(),
+			ctsCode = cts.textContent.trim(),
+			contentHtml = contentHtml.textContent.trim(),
+			mockupHtml = mockupHtml.textContent.trim(),
 			jsCode = javascript.textContent.trim(),
 			title = Dabblet.title(cssCode).trim();
-		
 		
 		var files = {};
 
@@ -119,10 +120,18 @@ var gist = {
 			files['dabblet.css'] = cssCode? { content: cssCode } : null;
 		}
 		
-		if (htmlMarkup ||  (!creatingNew && gist.files && gist.files['dabblet.html'])) {
-			files['dabblet.html'] = htmlMarkup? { content: htmlMarkup } : null;
+		if (ctsCode ||  (!creatingNew && gist.files && gist.files['dabblet.cts'])) {
+			files['dabblet.cts'] = ctsCode? { content: ctsCode } : null;
+		}
+
+		if (contentHtml ||  (!creatingNew && gist.files && gist.files['dabblet-content.html'])) {
+			files['dabblet-content.html'] = contentHtml? { content: contentHtml } : null;
 		}
 		
+		if (mockupHtml ||  (!creatingNew && gist.files && gist.files['dabblet-mockup.html'])) {
+			files['dabblet-mockup.html'] = mockupHtml? { content: mockupHtml } : null;
+		}
+
 		if (jsCode || (!creatingNew && gist.files && gist.files['dabblet.js'])) {
 			files['dabblet.js'] = jsCode? { content: jsCode } : null;
 		}
@@ -178,11 +187,13 @@ var gist = {
 				var files = gist.files = data.files;
 				
 				var cssFile = files['dabblet.css'],
-					htmlFile = files['dabblet.html'],
+					ctsFile = files['dabblet.cts'],
+					contentFile = files['dabblet-content.html'],
+					mockupFile = files['dabblet-mockup.html'],
 					jsFile = files['dabblet.js'],
 					settings = files['settings.json'];
 
-				if(!cssFile || !htmlFile || !jsFile) {
+				if(!cssFile || !ctsFile || !contentFile || !mockupFile || !jsFile) {
 					for(var filename in files) {
 						var ext = filename.slice(filename.lastIndexOf('.'));
 						
@@ -190,10 +201,18 @@ var gist = {
 							cssFile = files[filename];
 						}
 
-						if (!htmlFile && ext == '.html') {
-							htmlFile = files[filename];
+						if (!ctsFile && ext == '.cts') {
+							ctsFile = files[filename];
+						}
+
+						if (!contentFile && (filename.indexOf('content') > -1)) {
+							contentFile = files[filename];
 						}
 						
+						if (!mockupFile && (filename.indexOf('mockup') > -1)) {
+							mockupFile = files[filename];
+						}
+
 						if (!jsFile && ext == '.js') {
 							jsFile = files[filename];
 						}

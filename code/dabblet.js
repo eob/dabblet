@@ -1,7 +1,9 @@
 window.Dabblet = $u.attach({
 	pages: {
 		css: window['css-page'],
-		html: window['html-page'], 
+		cts: window['cts-page'],
+		'content-html': window['content-html-page'], 
+		'mockup-html': window['mockup-html-page'], 
 		javascript: window['javascript-page'],
 		result: result
 	},
@@ -17,7 +19,9 @@ window.Dabblet = $u.attach({
 						
 		if(confirm(question)) {
 			localStorage.removeItem('dabblet.css');
-			localStorage.removeItem('dabblet.html');
+			localStorage.removeItem('dabblet.cts');
+			localStorage.removeItem('dabblet-content.html');
+			localStorage.removeItem('dabblet-mockup.html');
 			localStorage.removeItem('dabblet.js');
 			window.onbeforeunload = null;
 			return true;
@@ -42,11 +46,12 @@ window.Dabblet = $u.attach({
 	},
 	
 	validate: {
-		HTML: function () {
+		ContentHTML: function () {
 			var code = '<!DOCTYPE html>\n<html>\n<head>\n' + 
 			           '<meta charset="utf-8">\n' +
 			           '<title>' + Dabblet.title(css.textContent) + '</title>\n</head>\n<body>\n' +
-			           html.textContent + '\n</body>\n</html>';
+			           html.textContent + '\n<script src=\'http://treesheets.org/release/cts-latest.js\'>' +
+			           '</script></body>\n</html>';
 
 			var form = $u.element.create('form', {
 				properties: {
@@ -118,18 +123,46 @@ window.Dabblet = $u.attach({
 				data: prefixfree? StyleFix.fix(code, raw) : code
 			}), '*');
 		},
+
+		CTS: function(code) {
+			code = code || cts.textContent;
+			
+			var title = Dabblet.title(code);
+			
+			result.contentWindow.postMessage(JSON.stringify({
+				action: 'title',
+				data: title + ' ✿ Dabblet result'
+			}), '*');
+						
+			result.contentWindow.postMessage(JSON.stringify({
+				action: 'cts',
+				data: code
+			}), '*');
+		},
 		
-		HTML: function(code) {
+		ContentHTML: function(code) {
 			code = code || html.textContent;
 			
 			result.contentWindow.postMessage(JSON.stringify({
-				action: 'html',
+				action: 'content-html',
 				data: code
 			}), '*');
 			
 			Dabblet.update.JavaScript();
 		},
 		
+		MockupHTML: function(code) {
+			code = code || html.textContent;
+			
+			result.contentWindow.postMessage(JSON.stringify({
+				action: 'mockup-html',
+				data: code
+			}), '*');
+			
+			Dabblet.update.JavaScript();
+		},
+
+
 		JavaScript: function(code) {
 			code = code || javascript.textContent;
 			
@@ -154,6 +187,8 @@ window.Dabblet = $u.attach({
 					return;
 				} 
 					
+				debugger;
+				
 				if(current) {
 					var ss = current.selectionStart,
 						se = current.selectionEnd;
@@ -161,7 +196,7 @@ window.Dabblet = $u.attach({
 					ss && current.setAttribute('data-ss', ss);
 					se && current.setAttribute('data-se', se);
 				}
-		
+
 				if(input && input.value != page || input.checked === false) {
 					input.click();
 				}
@@ -331,12 +366,16 @@ window.Dabblet = $u.attach({
 
 window.onbeforeunload = function(){
 	if(!gist.saved) {
-		html.onkeyup();
+		contentHtml.onkeyup();
+		mockupHtml.onkeyup();
 		css.onkeyup();
+		cts.onkeyup();
 		javascript.onkeyup();
 		
 		css.onblur();
-		html.onblur();
+		cts.onblur();
+		contentHtml.onblur();
+		mockupHtml.onblur();
 		javascript.onblur();
 		//return 'You have unsaved changes.';
 	}
@@ -345,8 +384,10 @@ window.onbeforeunload = function(){
 result.onload = function(){
 	result.loaded = true;
 	
-	html.onkeyup();
+	contentHtml.onkeyup();
+	mockupHtml.onkeyup();
 	css.onkeyup();
+	cts.onkeyup();
 	javascript.onkeyup();
 };
 
@@ -398,13 +439,20 @@ document.addEventListener('DOMContentLoaded', function() {
 				css.textContent = localStorage['dabblet.css'];
 			}
 			
-			if(typeof localStorage['dabblet.html'] === 'string') {
-				html.textContent = localStorage['dabblet.html'];
+			if(typeof localStorage['dabblet.cts'] === 'string') {
+				cts.textContent = localStorage['dabblet.cts'];
+			}
+
+			if(typeof localStorage['dabblet-content.html'] === 'string') {
+				contentHtml.textContent = localStorage['dabblet-content.html'];
 			}
 			
+			if(typeof localStorage['dabblet-mockup.html'] === 'string') {
+				mockupHtml.textContent = localStorage['dabblet-mockup.html'];
+			}
+
 			if(typeof localStorage['dabblet.js'] === 'string') {
 				javascript.textContent = localStorage['dabblet.js'];
-				
 			}
 		}
 		
@@ -432,8 +480,14 @@ $$('.editor.page > pre').forEach(function(editor){
 		
 			Dabblet.update.CSS(code);
 		}
-		else if (id === 'html') {
-			Dabblet.update.HTML(code);
+		else if (id === 'cts') {
+			Dabblet.update.CTS(code);
+		}
+		else if (id === 'mockup-html') {
+			Dabblet.update.MockupHTML(code);
+		}
+		else if (id === 'content-html') {
+			Dabblet.update.ContentHTML(code);
 		}
 
 		if(keyCode) {
@@ -457,7 +511,9 @@ $$('.editor.page > pre').forEach(function(editor){
 		if(!gist.saved) {
 			// Save draft
 			localStorage['dabblet.css'] = css.textContent;
-			localStorage['dabblet.html'] = html.textContent;
+			localStorage['dabblet.cts'] = cts.textContent;
+			localStorage['dabblet-mockup.html'] = contentHtml.textContent;
+			localStorage['dabblet-content.html'] = mockupHtml.textContent;
 			localStorage['dabblet.js'] = javascript.textContent;
 		}
 	});
@@ -485,15 +541,18 @@ document.addEventListener('keydown', function(evt) {
 				var page = 'css';
 				break;
 			case '2':
-				var page = 'html';
+				var page = 'cts';
 				break;
 			case '3':
-				var page = 'all';
+				var page = 'content-html';
 				break;
 			case '4':
-				var page = 'javascript';
+				var page = 'mockup-html';
 				break;
 			case '5':
+				var page = 'javascript';
+				break;
+			case '6':
 				var page = 'result';
 				break;
 		}
@@ -511,17 +570,21 @@ document.addEventListener('keydown', function(evt) {
 			if(code === 219) {
 				// Go to previous tab
 				var page = ({
-					'html': 'css',
-					'all': 'html',
-					'result': 'all'
+					'cts': 'css',
+					'content-html': 'cts',
+					'mockup-html': 'content-html',
+					'javascript': 'mockup-html',
+					'result': 'javascript'
 				})[currentPage];
 			}
 			else if (character === ']' || code === 221) {
 				// Go to next tab
 				var page = ({
-					'css': 'html',
-					'html': 'all',
-					'all': 'result'
+					'css': 'cts',
+					'cts': 'content-html',
+					'content-html': 'mockup-html',
+					'mockup-html': 'javascript',
+					'javascript': 'result'
 				})[currentPage];
 			}
 		}
@@ -572,7 +635,7 @@ document.addEventListener('keydown', function(evt) {
 }, true);
 
 onmessage = function(evt) {
-	if (true || evt.origin === 'http://localhost' || evt.origin === 'http://dabblet.com') {
+	if (true || evt.origin === 'http://localhost' || evt.origin === 'http://treesheets.org') {
 		var info = JSON.parse(evt.data),
 		    data = info.data;
 		
