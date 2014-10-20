@@ -2,8 +2,8 @@ window.Dabblet = $u.attach({
 	pages: {
 		css: window['css-page'],
 		cts: window['cts-page'],
-		'content-html': window['content-html-page'], 
-		'mockup-html': window['mockup-html-page'], 
+		htmlcontent: window['htmlmockup-page'], 
+		htmlmockup: window['htmlcontent-page'], 
 		javascript: window['javascript-page'],
 		result: result
 	},
@@ -20,8 +20,8 @@ window.Dabblet = $u.attach({
 		if(confirm(question)) {
 			localStorage.removeItem('dabblet.css');
 			localStorage.removeItem('dabblet.cts');
-			localStorage.removeItem('dabblet-content.html');
-			localStorage.removeItem('dabblet-mockup.html');
+			localStorage.removeItem('dabblet-htmlcontent.html');
+			localStorage.removeItem('dabblet-htmlmockup.html');
 			localStorage.removeItem('dabblet.js');
 			window.onbeforeunload = null;
 			return true;
@@ -46,7 +46,7 @@ window.Dabblet = $u.attach({
 	},
 	
 	validate: {
-		ContentHTML: function () {
+		htmlcontent: function () {
 			var code = '<!DOCTYPE html>\n<html>\n<head>\n' + 
 			           '<meta charset="utf-8">\n' +
 			           '<title>' + Dabblet.title(css.textContent) + '</title>\n</head>\n<body>\n' +
@@ -140,22 +140,24 @@ window.Dabblet = $u.attach({
 			}), '*');
 		},
 		
-		ContentHTML: function(code) {
+		htmlcontent: function(code) {
 			code = code || html.textContent;
+
+			alert('update content');
 			
 			result.contentWindow.postMessage(JSON.stringify({
-				action: 'content-html',
+				action: 'htmlcontent',
 				data: code
 			}), '*');
 			
 			Dabblet.update.JavaScript();
 		},
 		
-		MockupHTML: function(code) {
+		htmlmockup: function(code) {
 			code = code || html.textContent;
 			
 			result.contentWindow.postMessage(JSON.stringify({
-				action: 'mockup-html',
+				action: 'htmlmockup',
 				data: code
 			}), '*');
 			
@@ -186,9 +188,7 @@ window.Dabblet = $u.attach({
 				if(currentid == page) {
 					return;
 				} 
-					
-				debugger;
-				
+									
 				if(current) {
 					var ss = current.selectionStart,
 						se = current.selectionEnd;
@@ -366,16 +366,16 @@ window.Dabblet = $u.attach({
 
 window.onbeforeunload = function(){
 	if(!gist.saved) {
-		contentHtml.onkeyup();
-		mockupHtml.onkeyup();
+		htmlcontent.onkeyup();
+		htmlmockup.onkeyup();
 		css.onkeyup();
 		cts.onkeyup();
 		javascript.onkeyup();
 		
 		css.onblur();
 		cts.onblur();
-		contentHtml.onblur();
-		mockupHtml.onblur();
+		htmlcontent.onblur();
+		htmlmockup.onblur();
 		javascript.onblur();
 		//return 'You have unsaved changes.';
 	}
@@ -384,8 +384,8 @@ window.onbeforeunload = function(){
 result.onload = function(){
 	result.loaded = true;
 	
-	contentHtml.onkeyup();
-	mockupHtml.onkeyup();
+	htmlcontent.onkeyup();
+	htmlmockup.onkeyup();
 	css.onkeyup();
 	cts.onkeyup();
 	javascript.onkeyup();
@@ -443,12 +443,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				cts.textContent = localStorage['dabblet.cts'];
 			}
 
-			if(typeof localStorage['dabblet-content.html'] === 'string') {
-				contentHtml.textContent = localStorage['dabblet-content.html'];
+			if(typeof localStorage['dabblet-htmlcontent.html'] === 'string') {
+				htmlcontent.textContent = localStorage['dabblet-htmlcontent.html'];
 			}
 			
-			if(typeof localStorage['dabblet-mockup.html'] === 'string') {
-				mockupHtml.textContent = localStorage['dabblet-mockup.html'];
+			if(typeof localStorage['dabblet-htmlmockup.html'] === 'string') {
+				htmlmockup.textContent = localStorage['dabblet-htmlmockup.html'];
 			}
 
 			if(typeof localStorage['dabblet.js'] === 'string') {
@@ -469,7 +469,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 $$('.editor.page > pre').forEach(function(editor){
 	new Editor(editor);
-	
 	$u.event.bind(editor, 'contentchange', function(evt) {
 		var keyCode = evt.keyCode,
 		    id = this.id,
@@ -483,11 +482,11 @@ $$('.editor.page > pre').forEach(function(editor){
 		else if (id === 'cts') {
 			Dabblet.update.CTS(code);
 		}
-		else if (id === 'mockup-html') {
-			Dabblet.update.MockupHTML(code);
+		else if (id === 'htmlmockup') {
+			Dabblet.update.htmlmockup(code);
 		}
-		else if (id === 'content-html') {
-			Dabblet.update.ContentHTML(code);
+		else if (id === 'htmlcontent') {
+			Dabblet.update.htmlcontent(code);
 		}
 
 		if(keyCode) {
@@ -512,8 +511,8 @@ $$('.editor.page > pre').forEach(function(editor){
 			// Save draft
 			localStorage['dabblet.css'] = css.textContent;
 			localStorage['dabblet.cts'] = cts.textContent;
-			localStorage['dabblet-mockup.html'] = contentHtml.textContent;
-			localStorage['dabblet-content.html'] = mockupHtml.textContent;
+			localStorage['dabblet-htmlmockup.html'] = htmlcontent.textContent;
+			localStorage['dabblet-htmlcontent.html'] = htmlmockup.textContent;
 			localStorage['dabblet.js'] = javascript.textContent;
 		}
 	});
@@ -544,10 +543,10 @@ document.addEventListener('keydown', function(evt) {
 				var page = 'cts';
 				break;
 			case '3':
-				var page = 'content-html';
+				var page = 'htmlcontent';
 				break;
 			case '4':
-				var page = 'mockup-html';
+				var page = 'htmlmockup';
 				break;
 			case '5':
 				var page = 'javascript';
@@ -571,9 +570,9 @@ document.addEventListener('keydown', function(evt) {
 				// Go to previous tab
 				var page = ({
 					'cts': 'css',
-					'content-html': 'cts',
-					'mockup-html': 'content-html',
-					'javascript': 'mockup-html',
+					'htmlcontent': 'cts',
+					'htmlmockup': 'htmlcontent',
+					'javascript': 'htmlmockup',
 					'result': 'javascript'
 				})[currentPage];
 			}
@@ -581,9 +580,9 @@ document.addEventListener('keydown', function(evt) {
 				// Go to next tab
 				var page = ({
 					'css': 'cts',
-					'cts': 'content-html',
-					'content-html': 'mockup-html',
-					'mockup-html': 'javascript',
+					'cts': 'htmlcontent',
+					'htmlcontent': 'htmlmockup',
+					'htmlmockup': 'javascript',
 					'javascript': 'result'
 				})[currentPage];
 			}

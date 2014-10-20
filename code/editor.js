@@ -142,7 +142,6 @@ UndoManager.prototype = {
 
 var _ = window.Editor = function(pre) {
 	var that = this;
-	
 	this.pre = pre;
 	this.parent = pre.parentNode;
 	this.lang = pre.getAttribute('lang');

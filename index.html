@@ -98,16 +98,16 @@
 			
 			<input type="radio" name="page" value="cts" id="page-cts" data-scope="file" />
 			<label for="page-cts" title="⌘2" class="tab">
-				<span class="title">CTS </span>
+				<span class="title">CTS</span>
 			</label>
 
-			<input type="radio" name="page" value="content-html" id="page-content-html" data-scope="file" />
-			<label for="page-content-html" title="⌘3" class="tab">
+			<input type="radio" name="page" value="htmlcontent" id="page-htmlcontent" data-scope="file" />
+			<label for="page-htmlcontent" title="⌘3" class="tab">
 				<span class="title">Content HTML</span>
 			</label>
 			
-			<input type="radio" name="page" value="mockup-html" id="page-mockup-html" data-scope="file" />
-			<label for="page-mockup-html" title="⌘4" class="tab">
+			<input type="radio" name="page" value="htmlmockup" id="page-htmlmockup" data-scope="file" />
+			<label for="page-htmlmockup" title="⌘4" class="tab">
 				<span class="title">Mockup HTML</span>
 			</label>
 
@@ -125,6 +125,7 @@
 </header>
 
 <iframe class="page" id="result" src="http://preview.dabblet.com"></iframe>
+
 <section id="css-container" class="editor page"><pre id="css" spellcheck="false" class="language-css" contenteditable>/**
  * The first commented line is your dabblet’s title
  */
@@ -134,16 +135,13 @@ background: linear-gradient(45deg, #f06, yellow);
 min-height: 100%;</pre></section>
 <button title="Validate CSS" onclick="Dabblet.validate.CSS()" class="for-code css">✓</button>
 
-<iframe class="page" id="result" src="http://preview.dabblet.com"></iframe>
-<section id="cts-container" class="editor page"><pre id="css" spellcheck="false" class="language-cts" contenteditable>/**
+<section id="cts-container" class="editor page"><pre id="cts" spellcheck="false" class="language-cts" contenteditable>/**
  * This is your CTS file.
  */</pre></section>
 
-<section id="content-container" class="editor page"><pre id="html" spellcheck="false" class="language-html" contenteditable>&lt;!-- This is your Content HTML &lt;body>…&lt;/body> --></pre></section>
-<button title="Validate HTML" onclick="Dabblet.validate.HTML()" class="for-code html">✓</button>
+<section id="htmlcontent-container" class="editor page"><pre id="htmlcontent" spellcheck="false" class="language-html" contenteditable>&lt;!-- This is your Content HTML &lt;body>…&lt;/body> --></pre></section>
 
-<section id="mockup-container" class="editor page"><pre id="html" spellcheck="false" class="language-html" contenteditable>&lt;!-- This is your Mockup HTML &lt;body>…&lt;/body> --></pre></section>
-<button title="Validate HTML" onclick="Dabblet.validate.HTML()" class="for-code html">✓</button>
+<section id="htmlmockup-container" class="editor page"><pre id="htmlmockup" spellcheck="false" class="language-html" contenteditable>&lt;!-- This is your Mockup HTML &lt;body>…&lt;/body> --></pre></section>
 
 <section id="javascript-container" class="editor page"><pre id="javascript" spellcheck="false" class="language-javascript" contenteditable>// alert('Hello world!');</pre></section>
 <button title="Run JavaScript (⌘↩)" onclick="Dabblet.update.JavaScript()" class="for-code javascript">▶</button>

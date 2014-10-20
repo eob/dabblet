@@ -15,7 +15,8 @@ function $$(expr, con) {
 
 // Make each ID a global variable
 // Many browsers do this anyway (it’s in the HTML5 spec), so it ensures consistency
-$$('[id]').forEach(function(element) { window[element.id] = element; });
+$$('[id]').forEach(function(element) { window[element.id] = element;});
+
 
 // Array#splice but for strings
 String.prototype.splice = function(i, remove, add) {
